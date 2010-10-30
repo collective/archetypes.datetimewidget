@@ -1,0 +1,94 @@
+<tal:root>
+
+<input type="text" id="" name="" class="" title="" lang="" disabled=""
+       readonly="" alt="" tabindex="" accesskey="" size="2" maxlength="2"
+       tal:attributes="id string:${view/id}-day;
+                       name string:${view/name}-day;
+                       class view/klass;
+                       style view/style;
+                       title view/title;
+                       lang view/lang;
+                       onclick view/onclick;
+                       ondblclick view/ondblclick;
+                       onmousedown view/onmousedown;
+                       onmouseup view/onmouseup;
+                       onmouseover view/onmouseover;
+                       onmousemove view/onmousemove;
+                       onmouseout view/onmouseout;
+                       onkeypress view/onkeypress;
+                       onkeydown view/onkeydown;
+                       onkeyup view/onkeyup;
+                       value view/day;
+                       disabled view/disabled;
+                       tabindex view/tabindex;
+                       onfocus view/onfocus;
+                       onblur view/onblur;
+                       onchange view/onchange;
+                       readonly view/readonly;
+                       alt view/alt;
+                       accesskey view/accesskey;
+                       onselect view/onselect;" /> /
+<select id="" name="" class="" tabindex="" disabled=""
+        tal:attributes="id string:${view/id}-month;
+                        name string:${view/name}-month;
+                        class view/klass;
+                        style view/style;
+                        title view/title;
+                        lang view/lang;
+                        onclick view/onclick;
+                        ondblclick view/ondblclick;
+                        onmousedown view/onmousedown;
+                        onmouseup view/onmouseup;
+                        onmouseover view/onmouseover;
+                        onmousemove view/onmousemove;
+                        onmouseout view/onmouseout;
+                        onkeypress view/onkeypress;
+                        onkeydown view/onkeydown;
+                        onkeyup view/onkeyup;
+                        disabled view/disabled;
+                        tabindex view/tabindex;
+                        onfocus view/onfocus;
+                        onblur view/onblur;
+                        onchange view/onchange">
+    <option value="" selected=""
+            tal:repeat="item view/months"
+            tal:attributes="value item/value;
+                            selected python:item['selected'] and 'selected' or None"
+            tal:content="item/name">label</option>
+</select> /
+<input type="text" id="" name="" class="" title="" lang="" disabled=""
+       readonly="" alt="" tabindex="" accesskey="" size="4" maxlength="4"
+       tal:attributes="id string:${view/id}-year;
+                       name string:${view/name}-year;
+                       class view/klass;
+                       style view/style;
+                       title view/title;
+                       lang view/lang;
+                       onclick view/onclick;
+                       ondblclick view/ondblclick;
+                       onmousedown view/onmousedown;
+                       onmouseup view/onmouseup;
+                       onmouseover view/onmouseover;
+                       onmousemove view/onmousemove;
+                       onmouseout view/onmouseout;
+                       onkeypress view/onkeypress;
+                       onkeydown view/onkeydown;
+                       onkeyup view/onkeyup;
+                       value view/year;
+                       disabled view/disabled;
+                       tabindex view/tabindex;
+                       onfocus view/onfocus;
+                       onblur view/onblur;
+                       onchange view/onchange;
+                       readonly view/readonly;
+                       onselect view/onselect;" />
+<input name="field-empty-marker" type="hidden" value="1"
+       tal:attributes="name string:${view/name}-empty-marker" />
+
+<a tal:condition="view/show_jquerytools_dateinput"
+   tal:replace="structure view/show_jquerytools_dateinput_js" />
+
+<a tal:condition="view/show_today_link"
+   tal:replace="structure view/show_today_link_js" />
+
+</tal:root>

@@ -1,0 +1,15 @@
+*.pyc
+*.swp
+*.mo
+
+/.installed.cfg
+/bin/
+/coverage/
+/develop-eggs/
+/dist/
+/docs/
+/eggs/
+/include/
+/lib/
+/archetypes.datetimewidget.egg-info/
+

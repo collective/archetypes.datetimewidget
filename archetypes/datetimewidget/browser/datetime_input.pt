@@ -1,0 +1,123 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="archetypes.datetimewidget">
+
+<head><title></title></head>
+
+<body>
+
+  <metal:base_edit_macro define-macro="base_edit"
+        tal:define="visState python:widget.isVisible(here, mode);
+                    edit_accessor python:field.getEditAccessor(here);
+                    getMethod python:(widget.populate and (edit_accessor or accessor)) or None;
+                    value python:getMethod and getMethod();
+                    value python:widget.postback and request.get(fieldName, here.session_restore_value(fieldName, value)) or value;
+                    visCondition python:field.widget.testCondition(context.aq_inner.getParentNode(), portal, context);
+                    error_id python:errors.get(fieldName);">
+      <tal:condition
+          condition="python:visState == 'visible' and visCondition">
+        <div class="field"
+             tal:define="kssClassesView context/@@kss_field_decorator_view;
+                         getKssClasses nocall:kssClassesView/getKssClasses;
+                         kss_class python:getKssClasses(fieldName);
+                         css_class string:field Archetypes ${widget/getName} ${kss_class}"
+             tal:condition="python:('edit' in widget.modes and 'w' in field.mode and field.checkPermission('w',here))
+                                    or (mode=='search' and field.checkPermission('r',here))"
+             tal:attributes="class python:error_id and css_class + ' error' or css_class;
+                             id string:archetypes-fieldname-${fieldName}">
+
+          <div class="fieldErrorBox"
+               tal:content="error_id" i18n:translate="">Validation Error</div>
+          <div metal:define-slot="widget_body"></div>
+        </div>
+      </tal:condition>
+  </metal:base_edit_macro>
+  
+  <metal:view_macro define-macro="view">
+    <p tal:content="value">Value</p>
+  </metal:view_macro>
+  
+  <metal:edit_macro define-macro="edit">
+    <metal:use use-macro="field_macro | here/datetime_input/macros/base_edit">
+
+      <div metal:fill-slot="widget_body">
+      
+          <!-- day -->
+          <input type="text" id="" name="" class="day" title="" lang="" disabled=""
+                 readonly="" alt="" tabindex="" accesskey="" size="2" maxlength="2"
+			     tal:attributes="id string:${fieldName}-day;
+			                     name string:${fieldName}-day;
+			                     value value/day;
+			                     disabled nothing;" /> /
+		
+		<!-- month -->
+			<select id="" name="" class="month" tabindex="" disabled=""
+			        tal:attributes="id string:${fieldName}-month;
+			                        name string:${fieldName}-month;
+			                        disabled nothing;">
+                <tal:month repeat="month widget/months">
+                    <option tal:define="month_val month/value"
+                            tal:attributes="value month_val;
+                                            selected python:month_val==value.month() and 'selected' or ''"
+                        tal:content="month/name">label</option>
+                </tal:month>
+			</select> /
+       
+        <!-- year -->
+        <input type="text" id="" name="" class="year" title="" lang="" disabled=""
+               readonly="" alt="" tabindex="" accesskey="" size="4" maxlength="4"
+		       tal:attributes="id string:${fieldName}-year;
+		                       name string:${fieldName}-year;
+		                       value value/year;
+		                       disabled nothing;" /> &nbsp;
+		
+		<script tal:condition="widget/show_calendar"
+                tal:replace="structure python:widget.show_jquerytools_dateinput_js(fieldName)" />
+           
+		<!-- hour -->
+		<input type="text" id="" name="" class="hour" title="" lang="" disabled=""
+		       readonly="" alt="" tabindex="" accesskey="" size="2" maxlength="2"
+		       tal:attributes="id string:${fieldName}-hour;
+		                       name string:${fieldName}-hour;
+		                       value widget/padded_hour;
+		                       disabled nothing;" /> :
+        <!-- minute -->
+		<input type="text" id="" name="" class="minute" title="" lang="" disabled=""
+		       readonly="" alt="" tabindex="" accesskey="" size="2" maxlength="2"
+		       tal:attributes="id string:${fieldName}-min;
+		                       name string:${fieldName}-min;
+		                       value widget/padded_minute;
+		                       disabled nothing;" />
+        
+        <!-- am/pm -->
+		<select id="" name="" class="ampm" tabindex="" disabled=""
+		        tal:condition="widget/ampm"
+		        tal:attributes="id string:${fieldName}-ampm;
+		                        name string:${fieldName}-ampm;
+		                        disabled nothing;">
+		                        
+		    <option tal:attributes="selected python:not widget.is_pm() and 'selected' or None"
+		            value="AM" selected="">AM</option>
+		    <option tal:attributes="selected python:widget.is_pm() and 'selected' or ''"
+		            value="PM" selected="">PM</option>
+		            
+		</select>
+
+
+      <input name="field-empty-marker" type="hidden" value="1"
+             tal:attributes="name string:${fieldName}-empty-marker" />
+
+		<a tal:condition="widget/show_today_link"
+		   tal:replace="structure widget/show_today_link_js" />
+   
+   
+      </div>
+      
+   </metal:use>
+  </metal:edit_macro>
+
+</body>
+</html>
+
