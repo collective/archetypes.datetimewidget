@@ -33,36 +33,34 @@
         </div>
       </tal:condition>
   </metal:base_edit_macro>
-  
+
   <metal:view_macro define-macro="view">
     <p tal:content="value">Value</p>
   </metal:view_macro>
-  
+
   <metal:edit_macro define-macro="edit">
     <metal:use use-macro="field_macro | here/datetime_input/macros/base_edit">
 
       <div metal:fill-slot="widget_body">
-      
+
           <!-- day -->
-          <input id="" name="" class="day" title="" lang="" disabled=""
-                 readonly="" alt="" tabindex="" accesskey="" size="2" maxlength="2"
+          <input id="" name="" class="day"
+                 size="2" maxlength="2"
                  tal:define="field_id string:${fieldName}-day;
                              current_val python:request.get(field_id,value.day());"
                  tal:attributes="type python: widget.show_day and 'text' or 'hidden';
                                  id field_id;
                                  name field_id;
-                                 value current_val;
-                                 disabled nothing;" />
-                                 
+                                 value current_val;" />
+
           <span class="separator" tal:condition="widget/show_day">/</span>
-          
+
           <!-- month -->
-          <select id="" name="" class="month" tabindex="" disabled=""
+          <select id="" name="" class="month"
                   tal:define="field_id string:${fieldName}-month;
                               current_val python:request.get(field_id,value.month());"
                   tal:attributes="id field_id;
-                                  name field_id;
-                                  disabled nothing;">
+                                  name field_id;">
                 <tal:month repeat="month widget/months">
                     <option tal:define="month_val month/value"
                             tal:attributes="value month_val;
@@ -70,50 +68,46 @@
                         tal:content="month/name">label</option>
                 </tal:month>
           </select>
-          
+
           <span class="separator">/</span>
-       
+
           <!-- year -->
-          <input type="text" id="" name="" class="year" title="" lang="" disabled=""
-                 readonly="" alt="" tabindex="" accesskey="" size="2" maxlength="2"
+          <input type="text" id="" name="" class="year"
+                 size="4" maxlength="4"
                  tal:define="field_id string:${fieldName}-year;
                              current_val python:request.get(field_id,value.year());"
                  tal:attributes="id field_id;
                                  name field_id;
-                                 value current_val;
-                                 disabled nothing;" /> &nbsp;
-        
+                                 value current_val;" /> &nbsp;
+
           <script tal:condition="widget/show_calendar"
                   tal:replace="structure python:widget.get_js(fieldName)" />
-                  
+
           <tal:hm condition="widget/show_hm">
               <!-- hour -->
-              <input type="text" id="" name="" class="hour" title="" lang="" disabled=""
-                     readonly="" alt="" tabindex="" accesskey="" size="2" maxlength="2"
+              <input type="text" id="" name="" class="hour"
+                     size="2" maxlength="2"
                      tal:attributes="id string:${fieldName}-hour;
                                    name string:${fieldName}-hour;
-                                   value widget/padded_hour;
-                                   disabled nothing;" /> :
+                                   value widget/padded_hour;" /> :
               <!-- minute -->
-              <input type="text" id="" name="" class="minute" title="" lang="" disabled=""
-                     readonly="" alt="" tabindex="" accesskey="" size="2" maxlength="2"
+              <input type="text" id="" name="" class="minute"
+                     size="2" maxlength="2"
                      tal:attributes="id string:${fieldName}-min;
                                      name string:${fieldName}-min;
-                                     value widget/padded_minute;
-                                     disabled nothing;" />
-            
+                                     value widget/padded_minute;" />
+
               <!-- am/pm -->
-              <select id="" name="" class="ampm" tabindex="" disabled=""
+              <select id="" name="" class="ampm"
                       tal:condition="widget/ampm"
                       tal:attributes="id string:${fieldName}-ampm;
-                                      name string:${fieldName}-ampm;
-                                      disabled nothing;">
-                                    
+                                      name string:${fieldName}-ampm;">
+
                   <option tal:attributes="selected python:not widget.is_pm() and 'selected' or None"
                           value="AM" selected="">AM</option>
                   <option tal:attributes="selected python:widget.is_pm() and 'selected' or ''"
                           value="PM" selected="">PM</option>
-                        
+
               </select>
           </tal:hm>
 
@@ -122,9 +116,9 @@
 
           <a tal:condition="widget/show_today_link"
              tal:replace="structure widget/show_today_link_js" />
-   
+
       </div>
-      
+
    </metal:use>
   </metal:edit_macro>
 
