@@ -1,126 +1,132 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:metal="http://xml.zope.org/namespaces/metal"
-      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      i18n:domain="archetypes.datetimewidget">
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="archetypes.datetimewidget">
 
 <head><title></title></head>
 
 <body>
 
-  <metal:base_edit_macro define-macro="base_edit"
+    <metal:base_edit_macro define-macro="base_edit"
         tal:define="visState python:widget.isVisible(here, mode);
-                    edit_accessor python:field.getEditAccessor(here);
-                    getMethod python:(widget.populate and (edit_accessor or accessor)) or None;
-                    value python:getMethod and getMethod();
-                    value python:widget.postback and request.get(fieldName, here.session_restore_value(fieldName, value)) or value;
-                    visCondition python:field.widget.testCondition(context.aq_inner.getParentNode(), portal, context);
-                    error_id python:errors.get(fieldName);">
-      <tal:condition condition="python:visState == 'visible' and visCondition">
+            edit_accessor python:field.getEditAccessor(here);
+            getMethod python:(widget.populate and (edit_accessor or accessor)) or None;
+            value python:getMethod and getMethod();
+            value python:widget.postback and request.get(fieldName, here.session_restore_value(fieldName, value)) or value;
+            visCondition python:field.widget.testCondition(context.aq_inner.getParentNode(), portal, context);
+            error_id python:errors.get(fieldName);">
+    <tal:condition condition="python:visState == 'visible' and visCondition">
         <div class="field"
-             tal:define="kssClassesView context/@@kss_field_decorator_view;
-                         getKssClasses nocall:kssClassesView/getKssClasses;
-                         kss_class python:getKssClasses(fieldName);
-                         css_class string:field Archetypes ${widget/getName} ${kss_class}"
-             tal:condition="python:('edit' in widget.modes and 'w' in field.mode and field.checkPermission('w',here))
-                                    or (mode=='search' and field.checkPermission('r',here))"
-             tal:attributes="class python:error_id and css_class + ' error' or css_class;
-                             id string:archetypes-fieldname-${fieldName}">
+            tal:define="kssClassesView context/@@kss_field_decorator_view;
+                getKssClasses nocall:kssClassesView/getKssClasses;
+                kss_class python:getKssClasses(fieldName);
+                css_class string:field Archetypes ${widget/getName} ${kss_class}"
+            tal:condition="python:('edit' in widget.modes and 'w' in field.mode and field.checkPermission('w',here))
+                or (mode=='search' and field.checkPermission('r',here))"
+            tal:attributes="class python:error_id and css_class + ' error' or css_class;
+                id string:archetypes-fieldname-${fieldName}">
 
-          <div class="fieldErrorBox"
-               tal:content="error_id" i18n:translate="">Validation Error</div>
-          <div metal:define-slot="widget_body"></div>
-        </div>
-      </tal:condition>
-  </metal:base_edit_macro>
+    <div class="fieldErrorBox"
+        tal:content="error_id" i18n:translate="">Validation Error</div>
+    <div metal:define-slot="widget_body"></div>
+</div>
+</tal:condition>
+</metal:base_edit_macro>
 
-  <metal:view_macro define-macro="view">
-    <p tal:content="value">Value</p>
-  </metal:view_macro>
+    <metal:view_macro define-macro="view">
+        <p tal:content="value">Value</p>
+    </metal:view_macro>
 
-  <metal:edit_macro define-macro="edit">
-    <metal:use use-macro="field_macro | here/datetime_input/macros/base_edit">
+    <metal:edit_macro define-macro="edit"
+        tal:define="wholeDay context/getWholeDay|nothing;">
+        <metal:use use-macro="field_macro | here/datetime_input/macros/base_edit">
 
-      <div metal:fill-slot="widget_body">
+    <div metal:fill-slot="widget_body">
 
-          <!-- day -->
-          <input id="" name="" class="day"
-                 size="2" maxlength="2"
-                 tal:define="field_id string:${fieldName}-day;
-                             current_val python:request.get(field_id,value.day());"
-                 tal:attributes="type python: widget.show_day and 'text' or 'hidden';
-                                 id field_id;
-                                 name field_id;
-                                 value current_val;" />
+    <!-- day -->
+    <input id="" name="" class="day"
+        size="2" maxlength="2"
+        tal:define="field_id string:${fieldName}-day;
+            current_val python:request.get(field_id,value.day());"
+        tal:attributes="type python: widget.show_day and 'text' or 'hidden';
+            id field_id;
+            name field_id;
+            value current_val;" />
 
-          <span class="separator" tal:condition="widget/show_day">/</span>
+    <span class="separator" tal:condition="widget/show_day">/</span>
 
-          <!-- month -->
-          <select id="" name="" class="month"
-                  tal:define="field_id string:${fieldName}-month;
-                              current_val python:request.get(field_id,value.month());"
-                  tal:attributes="id field_id;
-                                  name field_id;">
-                <tal:month repeat="month widget/months">
-                    <option tal:define="month_val month/value"
-                            tal:attributes="value month_val;
-                                            selected python:str(month_val)==str(current_val) and 'selected' or ''"
-                        tal:content="month/name">label</option>
-                </tal:month>
-          </select>
+    <!-- month -->
+    <select id="" name="" class="month"
+        tal:define="field_id string:${fieldName}-month;
+            current_val python:request.get(field_id,value.month());"
+        tal:attributes="id field_id;
+            name field_id;">
+    <tal:month repeat="month widget/months">
+        <option tal:define="month_val month/value"
+            tal:attributes="value month_val;
+                selected python:str(month_val)==str(current_val) and 'selected' or ''"
+        tal:content="month/name">label</option>
+    </tal:month>
+    </select>
 
-          <span class="separator">/</span>
+    <span class="separator">/</span>
 
-          <!-- year -->
-          <input type="text" id="" name="" class="year"
-                 size="4" maxlength="4"
-                 tal:define="field_id string:${fieldName}-year;
-                             current_val python:request.get(field_id,value.year());"
-                 tal:attributes="id field_id;
-                                 name field_id;
-                                 value current_val;" /> &nbsp;
+    <!-- year -->
+    <input type="text" id="" name="" class="year"
+        size="4" maxlength="4"
+        tal:define="field_id string:${fieldName}-year;
+            current_val python:request.get(field_id,value.year());"
+        tal:attributes="id field_id;
+            name field_id;
+            value current_val;" /> &nbsp;
 
-          <script tal:condition="widget/show_calendar"
-                  tal:replace="structure python:widget.get_js(fieldName)" />
+    <script tal:condition="widget/show_calendar"
+        tal:replace="structure python:widget.get_js(fieldName)"></script>
 
-          <tal:hm condition="widget/show_hm">
-              <!-- hour -->
-              <input type="text" id="" name="" class="hour"
-                     size="2" maxlength="2"
-                     tal:attributes="id string:${fieldName}-hour;
-                                   name string:${fieldName}-hour;
-                                   value widget/padded_hour;" /> :
-              <!-- minute -->
-              <input type="text" id="" name="" class="minute"
-                     size="2" maxlength="2"
-                     tal:attributes="id string:${fieldName}-min;
-                                     name string:${fieldName}-min;
-                                     value widget/padded_minute;" />
+    <tal:hm condition="widget/show_hm">
+    &nbsp;
+    <span class="datetimewidget-time"
+            tal:attributes="style python:wholeDay and 'display:none' or ''">
 
-              <!-- am/pm -->
-              <select id="" name="" class="ampm"
-                      tal:condition="widget/ampm"
-                      tal:attributes="id string:${fieldName}-ampm;
-                                      name string:${fieldName}-ampm;">
+    <!-- hour -->
+    <input type="text" id="" name="" class="hour"
+        size="2" maxlength="2"
+        tal:attributes="id string:${fieldName}-hour;
+            name string:${fieldName}-hour;
+            value widget/padded_hour;" /> :
+    <!-- minute -->
+    <input type="text" id="" name="" class="minute"
+        size="2" maxlength="2"
+        tal:attributes="id string:${fieldName}-min;
+            name string:${fieldName}-min;
+            value widget/padded_minute;" />
 
-                  <option tal:attributes="selected python:not widget.is_pm() and 'selected' or None"
-                          value="AM" selected="">AM</option>
-                  <option tal:attributes="selected python:widget.is_pm() and 'selected' or ''"
-                          value="PM" selected="">PM</option>
+    <!-- am/pm -->
+    <select id="" name="" class="ampm"
+        tal:condition="widget/ampm"
+        tal:attributes="id string:${fieldName}-ampm;
+            name string:${fieldName}-ampm;">
+        <option tal:attributes="selected python:not widget.is_pm() and 'selected' or None"
+            value="AM" selected="">AM</option>
+        <option tal:attributes="selected python:widget.is_pm() and 'selected' or ''"
+            value="PM" selected="">PM</option>
+    </select>
 
-              </select>
-          </tal:hm>
+    </span>
 
-          <input name="field-empty-marker" type="hidden" value="1"
-                 tal:attributes="name string:${fieldName}-empty-marker" />
+    </tal:hm>
 
-          <a tal:condition="widget/show_today_link"
-             tal:replace="structure widget/show_today_link_js" />
+    <input name="field-empty-marker" type="hidden" value="1"
+        tal:attributes="name string:${fieldName}-empty-marker" />
 
-      </div>
+    <a tal:condition="widget/show_today_link"
+        tal:replace="structure widget/show_today_link_js" />
 
-   </metal:use>
-  </metal:edit_macro>
+    </div>
+
+    </metal:use>
+</metal:edit_macro>
 
 </body>
 </html>
