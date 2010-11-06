@@ -2,30 +2,24 @@
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-class DateWidget(BrowserView):
-    """ """
-    template = ViewPageTemplateFile('date_input.pt')
+class Base(BrowserView):
 
     @property
     def macros(self):
         return self.template.macros
-    
-    
-class DatetimeWidget(BrowserView):
-    """ """
+
+
+class DateWidget(Base):
+    """ view klass for DateWidget """
     template = ViewPageTemplateFile('datetime_input.pt')
 
-    @property
-    def macros(self):
-        return self.template.macros
-    
 
-class MonthYearWidget(BrowserView):
-    """ """
-    template = ViewPageTemplateFile('monthyear_input.pt')
+class DatetimeWidget(Base):
+    """ view klass for DatetimeWidget """
+    template = ViewPageTemplateFile('datetime_input.pt')
 
-    @property
-    def macros(self):
-        return self.template.macros
 
+class MonthYearWidget(Base):
+    """ view klass for MonthYearWidget """
+    template = ViewPageTemplateFile('datetime_input.pt')
 

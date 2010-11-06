@@ -6,8 +6,7 @@ version = '0.1'
 setup(name='archetypes.datetimewidget',
       version=version,
       description="A datetime widget for AT Content Types",
-      long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+      long_description=open("README.txt").read(),
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
@@ -15,9 +14,9 @@ setup(name='archetypes.datetimewidget',
         "Programming Language :: Python",
         ],
       keywords='',
-      author='',
-      author_email='',
-      url='http://svn.plone.org/svn/collective/',
+      author='Simone Orsi',
+      author_email='simahawk@gmail.com',
+      url='https://github.com/collective/archetypes.datetimewidget',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['archetypes'],

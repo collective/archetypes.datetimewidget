@@ -1,25 +1,5 @@
 #-*- coding: utf-8 -*-
 
-#############################################################################
-#                                                                           #
-#   Copyright (c) 2008 Rok Garbas <rok@garbas.si>                           #
-#                                                                           #
-# This program is free software; you can redistribute it and/or modify      #
-# it under the terms of the GNU General Public License as published by      #
-# the Free Software Foundation; either version 3 of the License, or         #
-# (at your option) any later version.                                       #
-#                                                                           #
-# This program is distributed in the hope that it will be useful,           #
-# but WITHOUT ANY WARRANTY; without even the implied warranty of            #
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
-# GNU General Public License for more details.                              #
-#                                                                           #
-# You should have received a copy of the GNU General Public License         #
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.     #
-#                                                                           #
-#############################################################################
-
-
 from datetime import date, datetime
 from i18n import MessageFactory as _
 
@@ -32,6 +12,13 @@ from Products.Archetypes.Registry import registerWidget
 class DateWidget(widgets.TypesWidget):
     """ Date widget. """
     
+    empty_value = ('', '', '')
+    calendar_icon_style = {'background':'url(popup_calendar.gif)',
+                           'height':'16px',
+                           'width':'16px',
+                           'display':'inline-block',
+                           'vertical-align':'middle'}
+    
     _properties = widgets.TypesWidget._properties.copy()
     _properties.update({
         'macro' : 'date_input',
@@ -39,16 +26,14 @@ class DateWidget(widgets.TypesWidget):
         'show_calendar' : True,
         'calendar_type' : 'gregorian',
         'klass' : u'date-widget',
-        'value' : ('', '', ''),
-        'show_jquerytools_dateinput' : False,
-        'jquerytools_dateinput_config' : 'selectors: true, ' \
-                                         'trigger: true, ' \
-                                         'yearRange: [-10, 10]',
-        'popup_calendar_icon' : '.css("background","url(popup_calendar.gif")' \
-                          '.css("height", "16px")' \
-                          '.css("width", "16px")' \
-                          '.css("display", "inline-block")' \
-                          '.css("vertical-align", "middle")',
+        'value' : empty_value,
+        'show_day' : True,
+        'show_hm':False,
+        'show_js_dateinput' : False,
+        'js_dateinput_config' : 'selectors: true, ' \
+                                'trigger: true, ' \
+                                'yearRange: [-10, 10]',
+        'popup_calendar_icon' : '.css(%s)' % str(calendar_icon_style),
     })
     
     def __call__(self, mode, instance, context=None):
@@ -70,7 +55,6 @@ class DateWidget(widgets.TypesWidget):
     def process_form(self, instance, field, form, empty_marker=None,
                      emptyReturnsMarker=False, validating=True):
         """Basic impl for form processing in a widget"""
-        
         fname = field.getName()
         value = form.get("%s-calendar" % fname, empty_marker)
         if value is empty_marker:
@@ -106,13 +90,12 @@ class DateWidget(widgets.TypesWidget):
         calendar = self.request.locale.dates.calendars[self.calendar_type]
         month_names = calendar.getMonthNames()
         for i, month in enumerate(month_names):
-            yield dict(
-                name     = month,
-                value    = i+1,)
+            yield dict(name = month,
+                       value = str(i+1), )
 
     @property
     def formatted_value(self):
-        if self.value == ('', '', ''):
+        if self.value == self.empty_value:
             return ''
         formatter = self.request.locale.dates.getFormatter("date", "short")
         date_value = date(*map(int, self.value))
@@ -124,26 +107,19 @@ class DateWidget(widgets.TypesWidget):
 
     @property
     def year(self):
-        year = self.request.get(self.name+'-year', None)
-        if year:
-            return year
         return self.value[0]
 
     @property
     def month(self):
-        month = self.request.get(self.name+'-month', None)
-        if month:
-            return month
         return self.value[1]
 
     @property
     def day(self):
-        day = self.request.get(self.name+'-day', None)
-        if day:
-            return day
         return self.value[2]
+    
 
     def extract(self, default=None):
+        import pdb;pdb.set_trace()
         # get normal input fields
         day = self.request.get(self.name + '-day', default)
         month = self.request.get(self.name + '-month', default)
@@ -168,6 +144,7 @@ class DateWidget(widgets.TypesWidget):
     def show_today_link_js(self):
         now = datetime.today()
         show_link_func = self.id+'-show-today-link'
+        import pdb;pdb.set_trace()
         for i in ['-', '_']:
             show_link_func = show_link_func.replace(i, '')
         return '<a href="#" onclick="' \
@@ -186,7 +163,28 @@ class DateWidget(widgets.TypesWidget):
     def language(self):
         return self.request.get('LANGUAGE', 'en')
     
-    def show_jquerytools_dateinput_js(self, fieldName):
+    @property
+    def js_value(self):
+        return 'new Date(%s, %s, %s), ' % self.value
+    
+    @property
+    def config_js(self):
+        config = 'lang: "%s", ' % self.language
+        if self.value != self.empty_value:
+            config += 'value: %s' % self.js_value 
+        config += 'change: function() { ' \
+                    'var value = this.getValue("yyyy-m-d").split("-"); \n' \
+                    'var parent = jq(this.getInput()).closest("div.%(parent_class)s"); \n' \
+                    'jq(parent).find(".year").val(value[0]); \n' \
+                    'jq(parent).find(".month").val(value[1]); \n' \
+                    'jq(parent).find(".day").val(value[2]); \n' \
+                '}, ' % dict(id = self.id,
+                             parent_class = self.name)
+        config += self.js_dateinput_config
+        return config
+        
+    @property
+    def localize_js(self):
         calendar = self.request.locale.dates.calendars[self.calendar_type]
         localize =  'jq.tools.dateinput.localize("' + self.language + '", {'
         localize += 'months: "%s",' % ','.join(calendar.getMonthNames())
@@ -194,6 +192,9 @@ class DateWidget(widgets.TypesWidget):
         localize += 'days: "%s",' % ','.join(calendar.getDayNames())
         localize += 'shortDays: "%s",' % ','.join(calendar.getDayAbbreviations())
         localize += '});'
+        return localize
+        
+    def get_js(self, fieldName):
         return '''
             <input type="hidden" name="%(name)s-calendar"
                    class="%(name)s-calendar" />
@@ -211,24 +212,9 @@ class DateWidget(widgets.TypesWidget):
             </script>''' % dict(
                 id=fieldName, name=fieldName,
                 day=self.day, month=self.month, year=self.year,
-                config=self.config_js, language=self.language, localize=localize,
+                config=self.config_js, language=self.language, localize=self.localize_js,
                 popup_calendar_icon=self.popup_calendar_icon,
             )
-    
-    @property
-    def config_js(self):
-        config = 'lang: "%s", ' % self.language
-        if self.value != ('', '', ''):
-            config += 'value: new Date(%s, %s, %s), ' % self.value
-        config += 'change: function() { ' \
-                    'var value = this.getValue("yyyy-mm-dd").split("-"); \n' \
-                    'jq("#%(id)s-year").val(value[0]); \n' \
-                    'jq("#%(id)s-month").val(value[1]); \n' \
-                    'jq("#%(id)s-day").val(value[2]); \n' \
-                '}, ' % dict(id = self.id)
-        config += self.jquerytools_dateinput_config
-        return config
-
             
 registerWidget(DateWidget,
                title='Date widget',

@@ -1,23 +1,5 @@
 #-*- coding: utf-8 -*- 
 
-#############################################################################
-#                                                                           #
-#   Copyright (c) 2008 Rok Garbas <rok@garbas.si>                           #
-#                                                                           #
-# This program is free software; you can redistribute it and/or modify      #
-# it under the terms of the GNU General Public License as published by      #
-# the Free Software Foundation; either version 3 of the License, or         #
-# (at your option) any later version.                                       #
-#                                                                           #
-# This program is distributed in the hope that it will be useful,           #
-# but WITHOUT ANY WARRANTY; without even the implied warranty of            #
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
-# GNU General Public License for more details.                              #
-#                                                                           #
-# You should have received a copy of the GNU General Public License         #
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.     #
-#                                                                           #
-#############################################################################
 __docformat__ = "reStructuredText"
 
 from datetime import datetime
@@ -31,18 +13,21 @@ from Products.Archetypes.Registry import registerWidget
 
 class DatetimeWidget(DateWidget):
     """ DateTime widget """
-
+    
+    empty_value = ('', '', '', '00', '00')
+    
     _properties = DateWidget._properties.copy()
     _properties.update({
         'macro' : 'datetime_input',
         'klass' : u'datetime-widget',
-        'value' : ('', '', '', '00', '00'),
+        'value' : empty_value,
+        'show_hm': True,
         'ampm' : False,
     })
     
     @property
     def formatted_value(self):
-        if self.value == ('', '', '', '00', '00'):
+        if self.value == self.empty_value:
             return ''
         formatter = self.request.locale.dates.getFormatter("dateTime", "short")
         datetime_value = datetime(*map(int, self.value))
@@ -67,10 +52,11 @@ class DatetimeWidget(DateWidget):
         return self.value[4]
 
     def _padded_value(self, value):
-        value = unicode(value)
-        if value and len(value) == 1:
-            value = u'0' + value
-        return value
+        return str(value).zfill(2)
+        #value = unicode(value)
+        #if value and len(value) == 1:
+        #    value = u'0' + value
+        #return value
 
     def is_pm(self):
         if int(self.hour) >= 12:
@@ -125,21 +111,9 @@ class DatetimeWidget(DateWidget):
         return default
     
     @property
-    def config_js(self):
-        config = 'lang: "%s", ' % self.language
-        if self.value != ('', '', '','00','00'):
-            config += 'value: new Date(%s, %s, %s, %s, %s), ' % self.value[:-2]
-        config += 'change: function() { ' \
-                    'var value = this.getValue("yyyy-m-d").split("-"); \n' \
-                    'var parent = jq(this.getInput()).closest("div.%(parent_class)s"); \n' \
-                    'jq(parent).find(".year").val(value[0]); \n' \
-                    'jq(parent).find(".month").val(value[1]); \n' \
-                    'jq(parent).find(".day").val(value[2]); \n' \
-                '}, ' % dict(id = self.id,
-                             parent_class = self.name)
-        config += self.jquerytools_dateinput_config
-        return config
-
+    def js_value(self):
+        return 'new Date(%s, %s, %s, %s, %s), ' % self.value
+    
 
 registerWidget(DatetimeWidget,
                title='Datetime widget',
