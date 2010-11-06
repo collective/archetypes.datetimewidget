@@ -16,17 +16,15 @@ class DatetimeWidget(DateWidget):
     _properties.update({
         'macro' : 'datetime_input',
         'klass' : u'datetime-widget',
-        'value' : empty_value,
         'show_hm': True,
         'ampm' : False,
     })
 
-    @property
-    def formatted_value(self):
-        if self.value == self.empty_value:
+    def get_formatted_value(self, value):
+        if value == self.empty_value:
             return ''
         formatter = self.request.locale.dates.getFormatter("dateTime", "short")
-        datetime_value = datetime(*map(int, self.value))
+        datetime_value = datetime(*value.parts()[:6])
         if datetime_value.year > 1900:
             return formatter.format(datetime_value)
         # due to fantastic datetime.strftime we need this hack

@@ -28,7 +28,6 @@ setup(name='archetypes.datetimewidget',
           'Zope2',
           'Products.Archetypes',
           'zope.i18nmessageid',
-          'z3c.form',
           'plone.app.jquerytools',
       ],
     )

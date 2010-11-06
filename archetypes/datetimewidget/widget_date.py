@@ -26,7 +26,6 @@ class DateWidget(widgets.TypesWidget):
         'show_calendar' : True,
         'calendar_type' : 'gregorian',
         'klass' : u'date-widget',
-        'value' : empty_value,
         'show_day' : True,
         'show_hm':False,
         'show_js_dateinput' : False,
@@ -93,12 +92,11 @@ class DateWidget(widgets.TypesWidget):
             yield dict(name = month,
                        value = str(i+1), )
 
-    @property
-    def formatted_value(self):
-        if self.value == self.empty_value:
+    def get_formatted_value(self, value):
+        if value == self.empty_value:
             return ''
         formatter = self.request.locale.dates.getFormatter("date", "short")
-        date_value = date(*map(int, self.value))
+        datetime_value = datetime(*value.parts()[:6])
         if date_value.year > 1900:
             return formatter.format(date_value)
         # due to fantastic datetime.strftime we need this hack
@@ -119,7 +117,7 @@ class DateWidget(widgets.TypesWidget):
     
 
     def extract(self, default=None):
-        import pdb;pdb.set_trace()
+        ### used in z3cform.widget: still needed???
         # get normal input fields
         day = self.request.get(self.name + '-day', default)
         month = self.request.get(self.name + '-month', default)
