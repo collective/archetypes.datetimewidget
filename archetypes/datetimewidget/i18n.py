@@ -1,17 +1,12 @@
-#-*- coding: utf-8 -*- 
+#-*- coding: utf-8 -*-
 
 __docformat__ = "reStructuredText"
-
 
 DOMAIN = 'archetypes.datetimewidget'
 LANGUAGES= ['hr', 'sl', 'sr', 'sr_Latn', 'en', 'es', 'pt', 'de', 'fr', 'it']
 
-try:
-    import zope.i18nmessageid
-    MessageFactory = zope.i18nmessageid.MessageFactory(DOMAIN)
-except:
-    pass
-
+import zope.i18nmessageid
+MessageFactory = zope.i18nmessageid.MessageFactory(DOMAIN)
 
 def sync():
     import os
@@ -36,7 +31,7 @@ def sync():
 
 
 
-    
-    
+
+
 if __name__ == "__main__":
     sync()

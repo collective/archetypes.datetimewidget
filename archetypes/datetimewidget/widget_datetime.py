@@ -1,21 +1,17 @@
-#-*- coding: utf-8 -*- 
-
+#-*- coding: utf-8 -*-
 __docformat__ = "reStructuredText"
 
 from datetime import datetime
 from widget_date import DateWidget
 
-from AccessControl import ClassSecurityInfo
-
-from Products.Archetypes import Widget as widgets
 from Products.Archetypes.Registry import registerWidget
 
 
 class DatetimeWidget(DateWidget):
     """ DateTime widget """
-    
+
     empty_value = ('', '', '', '00', '00')
-    
+
     _properties = DateWidget._properties.copy()
     _properties.update({
         'macro' : 'datetime_input',
@@ -24,7 +20,7 @@ class DatetimeWidget(DateWidget):
         'show_hm': True,
         'ampm' : False,
     })
-    
+
     @property
     def formatted_value(self):
         if self.value == self.empty_value:
@@ -36,7 +32,7 @@ class DatetimeWidget(DateWidget):
         # due to fantastic datetime.strftime we need this hack
         # for now ctime is default
         return datetime_value.ctime()
-    
+
     @property
     def hour(self):
         hour = self.request.get(self.name+'-hour', None)
@@ -107,13 +103,13 @@ class DatetimeWidget(DateWidget):
                     str(dateobj.minute))
         except zope.i18n.format.DateTimeParseError:
             pass
-        
+
         return default
-    
+
     @property
     def js_value(self):
         return 'new Date(%s, %s, %s, %s, %s), ' % self.value
-    
+
 
 registerWidget(DatetimeWidget,
                title='Datetime widget',

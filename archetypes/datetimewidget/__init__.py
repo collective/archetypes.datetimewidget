@@ -1,5 +1,4 @@
-#-*- coding: utf-8 -*- 
-
+#-*- coding: utf-8 -*-
 __docformat__ = "reStructuredText"
 
 from widget_date import DateWidget

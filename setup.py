@@ -25,13 +25,9 @@ setup(name='archetypes.datetimewidget',
       install_requires=[
           'setuptools',
           # -*- Extra requirements: -*-
+          'Zope2',
+          'Products.Archetypes',
+          'zope.i18nmessageid',
+          'z3c.form',
       ],
-      entry_points="""
-      # -*- Entry points: -*-
-
-      [z3c.autoinclude.plugin]
-      target = plone
-      """,
-      setup_requires=["PasteScript"],
-      paster_plugins=["ZopeSkel"],
-      )
+    )
