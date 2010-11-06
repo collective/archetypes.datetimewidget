@@ -7,12 +7,12 @@
 
 
     <!-- i18n:registerTranslations directory="locales" /-->
-    
+
     <include package=".browser" />
-    
+
     <genericsetup:registerProfile
       name="default"
-      title="Archetypes Datetime widget"
+      title="archetypes.datetimewidget default profile"
       directory="profiles/default"
       description="Installs the archetypes.datetimewidget package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
