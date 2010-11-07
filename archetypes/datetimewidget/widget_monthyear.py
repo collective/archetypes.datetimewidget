@@ -13,6 +13,7 @@ class MonthYearWidget(DateWidget):
     _properties = DateWidget._properties.copy()
     _properties.update({
         'macro' : 'monthyear_input',
+        'value' : empty_value,
         'klass' : u'monthyear-widget',
         'show_day': False,
     })

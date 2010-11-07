@@ -22,6 +22,7 @@ class DateWidget(widgets.TypesWidget):
     _properties = widgets.TypesWidget._properties.copy()
     _properties.update({
         'macro' : 'date_input',
+        'value' : empty_value,
         'show_today_link' : False,
         'show_calendar' : True,
         'calendar_type' : 'gregorian',
@@ -114,7 +115,6 @@ class DateWidget(widgets.TypesWidget):
     @property
     def day(self):
         return self.value[2]
-    
 
     def extract(self, default=None):
         ### used in z3cform.widget: still needed???

@@ -15,6 +15,7 @@ class DatetimeWidget(DateWidget):
     _properties = DateWidget._properties.copy()
     _properties.update({
         'macro' : 'datetime_input',
+        'value' : empty_value,
         'klass' : u'datetime-widget',
         'show_hm': True,
         'ampm' : False,
