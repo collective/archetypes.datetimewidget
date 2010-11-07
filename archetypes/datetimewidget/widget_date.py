@@ -142,7 +142,6 @@ class DateWidget(widgets.TypesWidget):
     def show_today_link_js(self):
         now = datetime.today()
         show_link_func = self.id+'-show-today-link'
-        import pdb;pdb.set_trace()
         for i in ['-', '_']:
             show_link_func = show_link_func.replace(i, '')
         return '<a href="#" onclick="' \
