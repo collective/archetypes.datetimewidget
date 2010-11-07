@@ -28,7 +28,7 @@ class DateWidget(widgets.TypesWidget):
         'calendar_type' : 'gregorian',
         'klass' : u'date-widget',
         'show_day' : True,
-        'show_hm':False,
+        'with_time':False,
         'show_js_dateinput' : False,
         'js_dateinput_config' : 'selectors: true, ' \
                                 'trigger: true, ' \

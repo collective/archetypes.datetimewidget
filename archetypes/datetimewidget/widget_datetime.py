@@ -17,7 +17,7 @@ class DatetimeWidget(DateWidget):
         'macro' : 'datetime_input',
         'value' : empty_value,
         'klass' : u'datetime-widget',
-        'show_hm': True,
+        'with_time': True,
         'ampm' : False,
     })
 

@@ -88,7 +88,7 @@
     <script tal:condition="widget/show_calendar"
         tal:replace="structure python:widget.get_js(fieldName)"></script>
 
-    <tal:hm condition="widget/show_hm">
+    <tal:hm condition="widget/with_time">
     &nbsp;
     <span class="datetimewidget-time"
             tal:attributes="style python:wholeDay and 'display:none' or ''">
