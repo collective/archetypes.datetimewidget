@@ -1,6 +1,14 @@
 Introduction
 ============
 
-A Datetime widget for Archetypes based on http://flowplayer.org/tools/dateinput/index.html (included into plone.app.jquerytools)
+A Datetime widget for Archetypes based on JQueryTools Dateinput, provided by
+plone.app.jquerytools. This package can be uses as a replacement for Archetypes
+CalendarWidget.
 
-NOTE: this package is a porting of "collective.z3cform.datetimewidget" by Rok Garbas
+This package is a port of "collective.z3cform.datetimewidget" by Rok Garbas.
+
+
+TODO
+====
+
+- Include popup_calendar.gif as browser-resource in this package.
