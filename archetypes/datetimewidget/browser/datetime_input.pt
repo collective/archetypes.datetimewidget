@@ -96,15 +96,21 @@
     <!-- hour -->
     <input type="text" id="" name="" class="hour"
         size="2" maxlength="2"
-        tal:attributes="id string:${fieldName}-hour;
-            name string:${fieldName}-hour;
-            value widget/padded_hour;" /> :
+        tal:define="field_id string:${fieldName}-hour;
+            current_val python:request.get(field_id,value.hour());
+            padded_val python:widget.padded_hour(current_val);"
+        tal:attributes="id field_id;
+            name field_id;
+            value current_val" /> :
     <!-- minute -->
     <input type="text" id="" name="" class="minute"
         size="2" maxlength="2"
-        tal:attributes="id string:${fieldName}-min;
-            name string:${fieldName}-min;
-            value widget/padded_minute;" />
+        tal:define="field_id string:${fieldName}-minute;
+            current_val python:request.get(field_id,value.minute());
+            padded_val python:widget.padded_hour(current_val);"
+        tal:attributes="id field_id;
+            name field_id;
+            value current_val" />
 
     <!-- am/pm -->
     <select id="" name="" class="ampm"

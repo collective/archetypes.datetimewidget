@@ -34,16 +34,10 @@ class DatetimeWidget(DateWidget):
 
     @property
     def hour(self):
-        hour = self.request.get(self.name+'-hour', None)
-        if hour:
-            return hour
         return self.value[3]
 
     @property
     def minute(self):
-        min = self.request.get(self.name+'-min', None)
-        if min:
-            return min
         return self.value[4]
 
     def _padded_value(self, value):
@@ -58,14 +52,13 @@ class DatetimeWidget(DateWidget):
             return True
         return False
 
-    def padded_hour(self):
-        hour = self.hour
+    def padded_hour(self, hour):
         if self.ampm is True and self.is_pm() and int(hour)!=12:
             hour = str(int(hour)-12)
         return self._padded_value(hour)
 
-    def padded_minute(self):
-        return self._padded_value(self.minute)
+    def padded_minute(self, minute):
+        return self._padded_value(minute)
 
     def extract(self, default=None):
         # get normal input fields
