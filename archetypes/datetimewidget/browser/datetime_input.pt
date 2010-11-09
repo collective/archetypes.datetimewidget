@@ -43,7 +43,7 @@
     </metal:view_macro>
 
     <metal:edit_macro define-macro="edit"
-        tal:define="wholeDay context/getWholeDay|nothing;">
+        tal:define="whole_day context/whole_day|nothing;">
         <metal:use use-macro="field_macro | here/datetime_input/macros/base_edit">
 
     <div metal:fill-slot="widget_body">
@@ -91,7 +91,7 @@
     <tal:hm condition="widget/with_time">
     &nbsp;
     <span class="datetimewidget-time"
-            tal:attributes="style python:wholeDay and 'display:none' or ''">
+            tal:attributes="style python:whole_day and 'display:none' or ''">
 
     <!-- hour -->
     <input type="text" id="" name="" class="hour"
