@@ -25,9 +25,16 @@ setup(name='archetypes.datetimewidget',
       install_requires=[
           'setuptools',
           # -*- Extra requirements: -*-
-          'Zope2',
           'Products.Archetypes',
-          'zope.i18nmessageid',
+          'Products.CMFCore'
+          'Zope2',
           'plone.app.jquerytools',
+          'zope.i18nmessageid',
       ],
+      extras_require={
+          'test': ['Products.DateRecurringIndex', # check this dep
+                   'Products.GenericSetup',
+                   'Products.PloneTestCase',
+                   ]
+          },
     )

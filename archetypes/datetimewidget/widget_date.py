@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 
 from datetime import date, datetime
-from i18n import MessageFactory as _
+from archetypes.datetimewidget.i18n import MessageFactory as _
 
 from AccessControl import ClassSecurityInfo
 
@@ -11,14 +11,14 @@ from Products.Archetypes.Registry import registerWidget
 
 class DateWidget(widgets.TypesWidget):
     """ Date widget. """
-    
+
     empty_value = ('', '', '')
     calendar_icon_style = {'background':'url(popup_calendar.gif)',
                            'height':'16px',
                            'width':'16px',
                            'display':'inline-block',
                            'vertical-align':'middle'}
-    
+
     _properties = widgets.TypesWidget._properties.copy()
     _properties.update({
         'macro' : 'date_input',
@@ -35,22 +35,22 @@ class DateWidget(widgets.TypesWidget):
                                 'yearRange: [-10, 10]',
         'popup_calendar_icon' : '.css(%s)' % str(calendar_icon_style),
     })
-    
+
     def __call__(self, mode, instance, context=None):
         self.context = instance
         self.request = instance.REQUEST
         return super(DateWidget,self).__call__(mode, instance, context=context)
-    
+
     @property
     def id(self):
         return self.getName()
-    
+
     @property
     def name(self):
         return self.getName()
-    
+
     security = ClassSecurityInfo()
-    
+
     security.declarePublic('process_form')
     def process_form(self, instance, field, form, empty_marker=None,
                      emptyReturnsMarker=False, validating=True):
@@ -83,8 +83,8 @@ class DateWidget(widgets.TypesWidget):
         # stick it back in request.form
 #        form[fname] = value
         return value, {}
-    
-    
+
+
     @property
     def months(self):
         calendar = self.request.locale.dates.calendars[self.calendar_type]
@@ -159,16 +159,16 @@ class DateWidget(widgets.TypesWidget):
     @property
     def language(self):
         return self.request.get('LANGUAGE', 'en')
-    
+
     @property
     def js_value(self):
         return 'new Date(%s, %s, %s), ' % self.value
-    
+
     @property
     def config_js(self):
         config = 'lang: "%s", ' % self.language
         if self.value != self.empty_value:
-            config += 'value: %s' % self.js_value 
+            config += 'value: %s' % self.js_value
         config += 'change: function() { ' \
                     'var value = this.getValue("yyyy-m-d").split("-"); \n' \
                     'var parent = jq(this.getInput()).closest("div.%(parent_class)s"); \n' \
@@ -179,7 +179,7 @@ class DateWidget(widgets.TypesWidget):
                              parent_class = self.name)
         config += self.js_dateinput_config
         return config
-        
+
     @property
     def localize_js(self):
         calendar = self.request.locale.dates.calendars[self.calendar_type]
@@ -190,7 +190,7 @@ class DateWidget(widgets.TypesWidget):
         localize += 'shortDays: "%s",' % ','.join(calendar.getDayAbbreviations())
         localize += '});'
         return localize
-        
+
     def get_js(self, fieldName):
         return '''
             <input type="hidden" name="%(name)s-calendar"
@@ -212,7 +212,7 @@ class DateWidget(widgets.TypesWidget):
                 config=self.config_js, language=self.language, localize=self.localize_js,
                 popup_calendar_icon=self.popup_calendar_icon,
             )
-            
+
 registerWidget(DateWidget,
                title='Date widget',
                description=('Date widget'),

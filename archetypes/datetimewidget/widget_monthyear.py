@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 __docformat__ = "reStructuredText"
 
-from widget_date import DateWidget
+from archetypes.datetimewidget.widget_date import DateWidget
 from Products.Archetypes.Registry import registerWidget
 
 

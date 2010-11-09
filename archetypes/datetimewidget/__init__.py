@@ -1,9 +1,9 @@
 #-*- coding: utf-8 -*-
 __docformat__ = "reStructuredText"
 
-from widget_date import DateWidget
-from widget_datetime import DatetimeWidget
-from widget_monthyear import MonthYearWidget
+from archetypes.datetimewidget.widget_date import DateWidget
+from archetypes.datetimewidget.widget_datetime import DatetimeWidget
+from archetypes.datetimewidget.widget_monthyear import MonthYearWidget
 
 from Products.CMFCore.utils import ContentInit
 from Products.Archetypes.atapi import process_types, listTypes

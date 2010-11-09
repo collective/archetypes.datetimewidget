@@ -2,7 +2,7 @@
 __docformat__ = "reStructuredText"
 
 from datetime import datetime
-from widget_date import DateWidget
+from archetypes.datetimewidget.widget_date import DateWidget
 
 from Products.Archetypes.Registry import registerWidget
 
