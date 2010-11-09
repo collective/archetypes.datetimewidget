@@ -81,7 +81,7 @@ class DateWidget(widgets.TypesWidget):
         if emptyReturnsMarker and value == '':
             return empty_marker
         # stick it back in request.form
-#        form[fname] = value
+        form[fname] = value
         return value, {}
 
 
