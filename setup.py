@@ -26,7 +26,7 @@ setup(name='archetypes.datetimewidget',
           'setuptools',
           # -*- Extra requirements: -*-
           'Products.Archetypes',
-          'Products.CMFCore'
+          'Products.CMFCore',
           'Zope2',
           'plone.app.jquerytools',
           'zope.i18nmessageid',
