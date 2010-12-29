@@ -47,91 +47,109 @@
         <metal:use use-macro="field_macro | here/datetime_input/macros/base_edit">
 
     <div metal:fill-slot="widget_body">
+    
+        <!-- day -->
+        <select class="day"
+                tal:define="field_id string:${fieldName}-day;
+                            current_val python:request.get(field_id,value.day());"
+                tal:attributes="id field_id;
+                                name field_id;">
+            <tal:day repeat="day widget/days">
+                <option tal:define="day_val day/value"
+                        tal:attributes="value day_val;
+                                        selected python:str(day_val)==str(current_val) and 'selected' or ''"
+                        tal:content="day/label">label</option>
+            </tal:day>
+        </select>
 
-    <!-- day -->
-    <input id="" name="" class="day"
-        size="2" maxlength="2"
-        tal:define="field_id string:${fieldName}-day;
-            current_val python:request.get(field_id,value.day());"
-        tal:attributes="type python: widget.show_day and 'text' or 'hidden';
-            id field_id;
-            name field_id;
-            value current_val;" />
+        <span class="separator" tal:condition="widget/show_day">/</span>
 
-    <span class="separator" tal:condition="widget/show_day">/</span>
+        <!-- month -->
+        <select id="" name="" class="month"
+            tal:define="field_id string:${fieldName}-month;
+                current_val python:request.get(field_id,value.month());"
+            tal:attributes="id field_id;
+                name field_id;">
+        <tal:month repeat="month widget/months">
+            <option tal:define="month_val month/value"
+                tal:attributes="value month_val;
+                    selected python:str(month_val)==str(current_val) and 'selected' or ''"
+            tal:content="month/name">label</option>
+        </tal:month>
+        </select>
 
-    <!-- month -->
-    <select id="" name="" class="month"
-        tal:define="field_id string:${fieldName}-month;
-            current_val python:request.get(field_id,value.month());"
-        tal:attributes="id field_id;
-            name field_id;">
-    <tal:month repeat="month widget/months">
-        <option tal:define="month_val month/value"
-            tal:attributes="value month_val;
-                selected python:str(month_val)==str(current_val) and 'selected' or ''"
-        tal:content="month/name">label</option>
-    </tal:month>
-    </select>
+        <span class="separator">/</span>
 
-    <span class="separator">/</span>
+        <!-- year -->
+        <select class="year"
+                tal:define="field_id string:${fieldName}-year;
+                            current_val python:request.get(field_id,value.year());"
+                tal:attributes="id field_id;
+                                name field_id;">
+            <tal:year repeat="year widget/years">
+                <option tal:define="year_val year/value"
+                        tal:attributes="value year_val;
+                                        selected python:str(year_val)==str(current_val) and 'selected' or ''"
+                        tal:content="year/label">label</option>
+            </tal:year>
+        </select>
+        &nbsp;
+        <script tal:condition="widget/show_calendar"
+                tal:replace="structure python:widget.get_js(fieldName)"></script>
 
-    <!-- year -->
-    <input type="text" id="" name="" class="year"
-        size="4" maxlength="4"
-        tal:define="field_id string:${fieldName}-year;
-            current_val python:request.get(field_id,value.year());"
-        tal:attributes="id field_id;
-            name field_id;
-            value current_val;" /> &nbsp;
+        <tal:hm condition="widget/with_time">
+            &nbsp;
+            <span class="datetimewidget-time"
+                  tal:attributes="style python:whole_day and 'display:none' or ''">
 
-    <script tal:condition="widget/show_calendar"
-        tal:replace="structure python:widget.get_js(fieldName)"></script>
+                <!-- hour -->
+                <select class="hour"
+                        tal:define="field_id string:${fieldName}-hour;
+                                    current_val python:request.get(field_id,value.hour());"
+                        tal:attributes="id field_id;
+                                        name field_id;">
+                    <tal:day repeat="hour widget/hours">
+                        <option tal:define="hour_val hour/value"
+                                tal:attributes="value hour_val;
+                                                selected python:str(hour_val)==str(current_val) and 'selected' or ''"
+                                tal:content="hour/label">label</option>
+                    </tal:day>
+                </select>
+                
+                <!-- minute -->
+                <select class="min"
+                        tal:define="field_id string:${fieldName}-min;
+                                    current_val python:request.get(field_id,value.minute());"
+                        tal:attributes="id field_id;
+                                        name field_id;">
+                    <tal:day repeat="min widget/minutes">
+                        <option tal:define="min_val min/value"
+                                tal:attributes="value min_val;
+                                                selected python:str(min_val)==str(current_val) and 'selected' or ''"
+                                tal:content="min/label">label</option>
+                    </tal:day>
+                </select>
 
-    <tal:hm condition="widget/with_time">
-    &nbsp;
-    <span class="datetimewidget-time"
-            tal:attributes="style python:whole_day and 'display:none' or ''">
+                <!-- am/pm -->
+                <select id="" name="" class="ampm"
+                    tal:condition="widget/ampm"
+                    tal:attributes="id string:${fieldName}-ampm;
+                        name string:${fieldName}-ampm;">
+                    <option tal:attributes="selected python:not widget.is_pm() and 'selected' or None"
+                        value="AM" selected="">AM</option>
+                    <option tal:attributes="selected python:widget.is_pm() and 'selected' or ''"
+                        value="PM" selected="">PM</option>
+                </select>
 
-    <!-- hour -->
-    <input type="text" id="" name="" class="hour"
-        size="2" maxlength="2"
-        tal:define="field_id string:${fieldName}-hour;
-            current_val python:request.get(field_id,value.hour());
-            padded_val python:widget.padded_hour(current_val);"
-        tal:attributes="id field_id;
-            name field_id;
-            value current_val" /> :
-    <!-- minute -->
-    <input type="text" id="" name="" class="minute"
-        size="2" maxlength="2"
-        tal:define="field_id string:${fieldName}-minute;
-            current_val python:request.get(field_id,value.minute());
-            padded_val python:widget.padded_hour(current_val);"
-        tal:attributes="id field_id;
-            name field_id;
-            value current_val" />
+            </span>
 
-    <!-- am/pm -->
-    <select id="" name="" class="ampm"
-        tal:condition="widget/ampm"
-        tal:attributes="id string:${fieldName}-ampm;
-            name string:${fieldName}-ampm;">
-        <option tal:attributes="selected python:not widget.is_pm() and 'selected' or None"
-            value="AM" selected="">AM</option>
-        <option tal:attributes="selected python:widget.is_pm() and 'selected' or ''"
-            value="PM" selected="">PM</option>
-    </select>
+        </tal:hm>
 
-    </span>
+        <input name="field-empty-marker" type="hidden" value="1"
+               tal:attributes="name string:${fieldName}-empty-marker" />
 
-    </tal:hm>
-
-    <input name="field-empty-marker" type="hidden" value="1"
-        tal:attributes="name string:${fieldName}-empty-marker" />
-
-    <a tal:condition="widget/show_today_link"
-        tal:replace="structure widget/show_today_link_js" />
+        <a tal:condition="widget/show_today_link"
+           tal:replace="structure widget/show_today_link_js" />
 
     </div>
 

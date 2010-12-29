@@ -40,13 +40,6 @@ class DatetimeWidget(DateWidget):
     def minute(self):
         return self.value[4]
 
-    def _padded_value(self, value):
-        return str(value).zfill(2)
-        #value = unicode(value)
-        #if value and len(value) == 1:
-        #    value = u'0' + value
-        #return value
-
     def is_pm(self):
         if int(self.hour) >= 12:
             return True
@@ -59,6 +52,14 @@ class DatetimeWidget(DateWidget):
 
     def padded_minute(self, minute):
         return self._padded_value(minute)
+    
+    @property
+    def minutes(self):
+        return [{'value':x,'label':self.padded_minute(x)} for x in range(60)]
+        
+    @property
+    def hours(self):
+        return [{'value':x,'label':self.padded_hour(x)} for x in range(24)]
 
     def extract(self, default=None):
         # get normal input fields

@@ -40,6 +40,10 @@ class DateWidget(widgets.TypesWidget):
         self.context = instance
         self.request = instance.REQUEST
         return super(DateWidget,self).__call__(mode, instance, context=context)
+        
+    def debugit(self, val):
+        import pdb;pdb.set_trace()
+        return val
 
     @property
     def id(self):
@@ -83,7 +87,14 @@ class DateWidget(widgets.TypesWidget):
         # stick it back in request.form
         form[fname] = value
         return value, {}
-
+        
+    def _padded_value(self, value):
+        return str(value).zfill(2)
+    
+    @property
+    def days(self):
+        day_range = range(1,32)
+        return [{'value':x,'label':self._padded_value(x)} for x in day_range]
 
     @property
     def months(self):
@@ -92,6 +103,11 @@ class DateWidget(widgets.TypesWidget):
         for i, month in enumerate(month_names):
             yield dict(name = month,
                        value = str(i+1), )
+    
+    @property
+    def years(self):
+        year_range = range(2000,2020)
+        return [{'value':x,'label':x} for x in year_range]
 
     def get_formatted_value(self, value):
         if value == self.empty_value:
@@ -175,6 +191,10 @@ class DateWidget(widgets.TypesWidget):
                     'jq(parent).find(".year").val(value[0]); \n' \
                     'jq(parent).find(".month").val(value[1]); \n' \
                     'jq(parent).find(".day").val(value[2]); \n' \
+                    'if(jq(parent).attr("id")=="archetypes-fieldname-startDate"){\n'\
+                        'updateEndDate(); // see ++resource++event.js \n' \
+                    '}\n'\
+                    'validateEndDate(); // see ++resource++event.js \n' \
                 '}, ' % dict(id = self.id,
                              parent_class = self.name)
         config += self.js_dateinput_config
@@ -193,7 +213,7 @@ class DateWidget(widgets.TypesWidget):
 
     def get_js(self, fieldName):
         return '''
-            <input type="hidden" name="%(name)s-calendar"
+            <input type="hidden" id="%(name)s" name="%(name)s-calendar"
                    class="%(name)s-calendar" />
             <script type="text/javascript">
                 %(localize)s
