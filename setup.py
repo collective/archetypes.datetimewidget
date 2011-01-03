@@ -32,7 +32,7 @@ setup(name='archetypes.datetimewidget',
           'zope.i18nmessageid',
       ],
       extras_require={
-          'test': ['Products.DateRecurringIndex', # check this dep
+          'test': ['Products.DateRecurringIndex', # TODO: check this dep
                    'Products.GenericSetup',
                    'Products.PloneTestCase',
                    ]
