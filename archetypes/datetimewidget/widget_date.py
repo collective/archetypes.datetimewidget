@@ -185,18 +185,16 @@ class DateWidget(widgets.TypesWidget):
         config = 'lang: "%s", ' % self.language
         if self.value != self.empty_value:
             config += 'value: %s' % self.js_value
-        config += 'change: function() { ' \
-                    'var value = this.getValue("yyyy-m-d").split("-"); \n' \
-                    'var parent = jq(this.getInput()).closest("div.%(parent_class)s"); \n' \
-                    'jq(parent).find(".year").val(value[0]); \n' \
-                    'jq(parent).find(".month").val(value[1]); \n' \
-                    'jq(parent).find(".day").val(value[2]); \n' \
-                    'if(jq(parent).attr("id")=="archetypes-fieldname-startDate"){\n'\
-                        'updateEndDate(); // see ++resource++event.js \n' \
-                    '}\n'\
-                    'validateEndDate(); // see ++resource++event.js \n' \
-                '}, ' % dict(id = self.id,
-                             parent_class = self.name)
+        config += ('change: function() {\n'
+                   '  var value = this.getValue();\n'
+                   '  var parent = jQuery(this.getInput()).closest("div.%(parent_class)s");\n'
+                   '  jQuery(parent).find(".year").val(value.getFullYear());\n'
+                   '  jQuery(parent).find(".month").val(value.getMonth()+1);\n'
+                   '  jQuery(parent).find(".day").val(value.getDate());\n'
+#                   '  jQuery(parent).find(".hour").val(value.getHours());\n'
+#                   '  jQuery(parent).find(".min").val(value.getMinutes());\n'
+                   '}, ') % dict(id = self.id,
+                                 parent_class = self.name)
         config += self.js_dateinput_config
         return config
 
