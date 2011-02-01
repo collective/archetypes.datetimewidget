@@ -95,7 +95,7 @@
         </select>
         &nbsp;
         <script tal:condition="widget/show_calendar"
-                tal:replace="structure python:widget.get_js(fieldName)"></script>
+                tal:replace="structure python:widget.get_js(fieldName, value)"></script>
 
         <tal:hm condition="widget/with_time">
             &nbsp;

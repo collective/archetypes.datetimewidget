@@ -61,47 +61,14 @@ class DatetimeWidget(DateWidget):
     def hours(self):
         return [{'value':x,'label':self.padded_hour(x)} for x in range(24)]
 
-    def extract(self, default=None):
-        # get normal input fields
-        day = self.request.get(self.name + '-day', default)
-        month = self.request.get(self.name + '-month', default)
-        year = self.request.get(self.name + '-year', default)
-        hour = self.request.get(self.name + '-hour', default)
-        minute = self.request.get(self.name + '-min', default)
-
-        if (self.ampm is True and
-            hour is not default and
-            minute is not default and
-            int(hour)!=12):
-            ampm = self.request.get(self.name + '-ampm', default)
-            if ampm == 'PM':
-                hour = str(12+int(hour))
-            # something strange happened since we either
-            # should have 'PM' or 'AM', return default
-            elif ampm != 'AM':
-                return default
-
-        if default not in (year, month, day, hour, minute):
-            return (year, month, day, hour, minute)
-
-        # get a hidden value
-        formatter = self.request.locale.dates.getFormatter("dateTime", "short")
-        hidden_date = self.request.get(self.name, '')
-        try:
-            dateobj = formatter.parse(hidden_date)
-            return (str(dateobj.year),
-                    str(dateobj.month),
-                    str(dateobj.day),
-                    str(dateobj.hour),
-                    str(dateobj.minute))
-        except zope.i18n.format.DateTimeParseError:
-            pass
-
-        return default
-
-    @property
-    def js_value(self):
-        return 'new Date(%s, %s, %s, %s, %s), ' % self.value
+    def js_value(self, value):
+        year = value.year()
+        month = value.month() - 1
+        day = value.day()
+        hour = value.hour()
+        min = value.minute()
+        return 'new Date(%s, %s, %s, %s, %s), ' % (
+            year, month, day, hour, min)
 
 
 registerWidget(DatetimeWidget,

@@ -22,7 +22,6 @@ class DateWidget(widgets.TypesWidget):
     _properties = widgets.TypesWidget._properties.copy()
     _properties.update({
         'macro' : 'date_input',
-        'value' : empty_value,
         'show_today_link' : False,
         'show_calendar' : True,
         'calendar_type' : 'gregorian',
@@ -132,29 +131,6 @@ class DateWidget(widgets.TypesWidget):
     def day(self):
         return self.value[2]
 
-    def extract(self, default=None):
-        ### used in z3cform.widget: still needed???
-        # get normal input fields
-        day = self.request.get(self.name + '-day', default)
-        month = self.request.get(self.name + '-month', default)
-        year = self.request.get(self.name + '-year', default)
-
-        if not default in (year, month, day):
-            return (year, month, day)
-
-        # get a hidden value
-        formatter = self.request.locale.dates.getFormatter("date", "short")
-        hidden_date = self.request.get(self.name, '')
-        try:
-            dateobj = formatter.parse(hidden_date)
-            return (str(dateobj.year),
-                    str(dateobj.month),
-                    str(dateobj.day))
-        except zope.i18n.format.DateTimeParseError:
-            pass
-
-        return default
-
     def show_today_link_js(self):
         now = datetime.today()
         show_link_func = self.id+'-show-today-link'
@@ -176,23 +152,21 @@ class DateWidget(widgets.TypesWidget):
     def language(self):
         return self.request.get('LANGUAGE', 'en')
 
-    @property
-    def js_value(self):
-        return 'new Date(%s, %s, %s), ' % self.value
+    def js_value(self, value):
+        year = value.year
+        month = value.month() - 1
+        day = value.day()
+        return 'new Date(%s, %s, %s), ' % (year, month, day)
 
-    @property
-    def config_js(self):
+    def config_js(self, value):
         config = 'lang: "%s", ' % self.language
-        if self.value != self.empty_value:
-            config += 'value: %s' % self.js_value
+        config += 'value: %s' % self.js_value(value)
         config += ('change: function() {\n'
                    '  var value = this.getValue();\n'
                    '  var parent = jQuery(this.getInput()).closest("div.%(parent_class)s");\n'
                    '  jQuery(parent).find(".year").val(value.getFullYear());\n'
                    '  jQuery(parent).find(".month").val(value.getMonth()+1);\n'
                    '  jQuery(parent).find(".day").val(value.getDate());\n'
-#                   '  jQuery(parent).find(".hour").val(value.getHours());\n'
-#                   '  jQuery(parent).find(".min").val(value.getMinutes());\n'
                    '}, ') % dict(id = self.id,
                                  parent_class = self.name)
         config += self.js_dateinput_config
@@ -201,7 +175,7 @@ class DateWidget(widgets.TypesWidget):
     @property
     def localize_js(self):
         calendar = self.request.locale.dates.calendars[self.calendar_type]
-        localize =  'jq.tools.dateinput.localize("' + self.language + '", {'
+        localize =  'jQuery.tools.dateinput.localize("' + self.language + '", {'
         localize += 'months: "%s",' % ','.join(calendar.getMonthNames())
         localize += 'shortMonths: "%s",' % ','.join(calendar.getMonthAbbreviations())
         localize += 'days: "%s",' % ','.join(calendar.getDayNames())
@@ -209,25 +183,25 @@ class DateWidget(widgets.TypesWidget):
         localize += '});'
         return localize
 
-    def get_js(self, fieldName):
+    def get_js(self, fieldName, value):
         return '''
             <input type="hidden" id="%(name)s" name="%(name)s-calendar"
                    class="%(name)s-calendar" />
             <script type="text/javascript">
                 %(localize)s
-                jq(".%(name)s-calendar").dateinput({%(config)s}).unbind('change')
+                jQuery(".%(name)s-calendar").dateinput({%(config)s}).unbind('change')
                     .bind('onShow', function (event) {
-                        var trigger_offset = jq(this).next().offset();
-                        jq(this).data('dateinput').getCalendar().offset(
+                        var trigger_offset = jQuery(this).next().offset();
+                        jQuery(this).data('dateinput').getCalendar().offset(
                             {top: trigger_offset.top+20, left: trigger_offset.left}
                         );
                     });
-                jq(".%(name)s-calendar").next()%(popup_calendar_icon)s;
+                jQuery(".%(name)s-calendar").next()%(popup_calendar_icon)s;
 
             </script>''' % dict(
                 id=fieldName, name=fieldName,
                 day=self.day, month=self.month, year=self.year,
-                config=self.config_js, language=self.language, localize=self.localize_js,
+                config=self.config_js(value), language=self.language, localize=self.localize_js,
                 popup_calendar_icon=self.popup_calendar_icon,
             )
 
