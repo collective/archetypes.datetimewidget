@@ -71,7 +71,7 @@ class DateWidget(widgets.TypesWidget):
         month = form.get('%s-month' % fname, '00')
         day = form.get('%s-day' % fname, '00')
         hour = form.get('%s-hour' % fname, '00')
-        minute = form.get('%s-minute' % fname, '00')
+        minute = form.get('%s-min' % fname, '00')
         ampm = form.get('%s-ampm' % fname, '')
         if (year != '0000') and (day != '00') and (month != '00'):
             if ampm and ampm == 'PM' and hour != '12':
