@@ -13,7 +13,7 @@
             edit_accessor python:field.getEditAccessor(here);
             getMethod python:(widget.populate and (edit_accessor or accessor)) or None;
             value python:getMethod and getMethod();
-            value python:widget.postback and request.get(fieldName, here.session_restore_value(fieldName, value)) or value;
+            value python:widget.postback and here.ZopeTime(request.get(fieldName, value)) or value;
             visCondition python:field.widget.testCondition(context.aq_inner.getParentNode(), portal, context);
             error_id python:errors.get(fieldName);">
         <tal:condition condition="python:visState == 'visible' and visCondition">
@@ -37,8 +37,7 @@
     <metal:view_macro define-macro="view"
       tal:define="visState python:widget.isVisible(here, mode);
         getMethod python:(widget.populate and accessor) or None;
-        value python:getMethod and getMethod();
-        value python:widget.postback and request.get(fieldName, here.session_restore_value(fieldName, value)) or value;">
+        value python:getMethod and getMethod();">
         <span tal:content="python:widget.get_formatted_value(value)">Value</span>
     </metal:view_macro>
 
