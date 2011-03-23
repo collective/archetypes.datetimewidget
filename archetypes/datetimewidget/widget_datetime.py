@@ -52,11 +52,11 @@ class DatetimeWidget(DateWidget):
 
     def padded_minute(self, minute):
         return self._padded_value(minute)
-    
+
     @property
     def minutes(self):
         return [{'value':x,'label':self.padded_minute(x)} for x in range(60)]
-        
+
     @property
     def hours(self):
         return [{'value':x,'label':self.padded_hour(x)} for x in range(24)]
