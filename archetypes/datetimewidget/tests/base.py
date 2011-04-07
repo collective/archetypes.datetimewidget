@@ -16,7 +16,7 @@ profile_registry.registerProfile('DatetimeWidget_examples',
     'profiles/examples',
     'archetypes.datetimewidget',
     EXTENSION)
-ptc.setupPloneSite(extension_profiles=['archetypes.datetimewidget:default',])
+ptc.setupPloneSite(extension_profiles=['archetypes.datetimewidget:DatetimeWidget_examples',])
 
 import archetypes.datetimewidget
 
