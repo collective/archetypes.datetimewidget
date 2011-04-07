@@ -10,21 +10,13 @@ from Products.PloneTestCase.layer import PloneSite
 # setup test content types
 from Products.GenericSetup import EXTENSION, profile_registry
 
-# XXX move this to PloneTestCase
-# index has to be installed first and not deferred via @onsetup
-def setupIndex():
-    import Products.DateRecurringIndex
-    ptc.installProduct('DateRecurringIndex')
-setupIndex()
-
-
 profile_registry.registerProfile('DatetimeWidget_examples',
     'DatetimeWidget Example Content Types',
     'Extension profile including Archetypes example content types',
     'profiles/examples',
     'archetypes.datetimewidget',
     EXTENSION)
-ptc.setupPloneSite(extension_profiles=['archetypes.datetimewidget:DatetimeWidget_examples',])
+ptc.setupPloneSite(extension_profiles=['archetypes.datetimewidget:default',])
 
 import archetypes.datetimewidget
 
