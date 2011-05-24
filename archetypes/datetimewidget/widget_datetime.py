@@ -28,7 +28,7 @@ class DatetimeWidget(DateWidget):
         formatter = self.request.locale.dates.getFormatter("dateTime", "short")
         datetime_value = datetime(*value.parts()[:6])
         if datetime_value.year > 1900:
-            return formatter.format(datetime_value)a
+            return formatter.format(datetime_value)
 
         # due to fantastic datetime.strftime we need this hack
         # for now ctime is default
