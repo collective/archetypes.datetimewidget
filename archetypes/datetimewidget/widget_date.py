@@ -109,8 +109,9 @@ class DateWidget(widgets.TypesWidget):
         return [{'value':x,'label':x} for x in year_range]
 
     def get_formatted_value(self, value):
-        if value == self.empty_value:
+        if value in (self.empty_value, None):
             return ''
+
         formatter = self.request.locale.dates.getFormatter("date", "short")
         datetime_value = datetime(*value.parts()[:6])
         if date_value.year > 1900:

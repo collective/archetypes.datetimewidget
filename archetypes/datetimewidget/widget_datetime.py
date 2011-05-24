@@ -22,12 +22,14 @@ class DatetimeWidget(DateWidget):
     })
 
     def get_formatted_value(self, value):
-        if value == self.empty_value:
+        if value in (self.empty_value, None):
             return ''
+
         formatter = self.request.locale.dates.getFormatter("dateTime", "short")
         datetime_value = datetime(*value.parts()[:6])
         if datetime_value.year > 1900:
-            return formatter.format(datetime_value)
+            return formatter.format(datetime_value)a
+
         # due to fantastic datetime.strftime we need this hack
         # for now ctime is default
         return datetime_value.ctime()
