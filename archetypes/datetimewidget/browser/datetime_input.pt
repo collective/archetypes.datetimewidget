@@ -8,32 +8,6 @@
 
 <body>
 
-    <metal:base_edit_macro define-macro="base_edit"
-        tal:define="visState python:widget.isVisible(here, mode);
-            edit_accessor python:field.getEditAccessor(here);
-            getMethod python:(widget.populate and (edit_accessor or accessor)) or None;
-            value python:getMethod and getMethod();
-            value python:widget.postback and here.ZopeTime(request.get(fieldName, value)) or value;
-            visCondition python:field.widget.testCondition(context.aq_inner.getParentNode(), portal, context);
-            error_id python:errors.get(fieldName);">
-        <tal:condition condition="python:visState == 'visible' and visCondition">
-            <div class="field"
-                tal:define="kssClassesView context/@@kss_field_decorator_view;
-                    getKssClasses nocall:kssClassesView/getKssClasses;
-                    kss_class python:getKssClasses(fieldName);
-                    css_class string:field Archetypes ${widget/getName} ${kss_class}"
-                tal:condition="python:('edit' in widget.modes and 'w' in field.mode and field.checkPermission('w',here))
-                    or (mode=='search' and field.checkPermission('r',here))"
-                tal:attributes="class python:error_id and css_class + ' error' or css_class;
-                    id string:archetypes-fieldname-${fieldName}">
-
-                <div class="fieldErrorBox"
-                    tal:content="error_id" i18n:translate="">Validation Error</div>
-                <div metal:define-slot="widget_body"></div>
-            </div>
-        </tal:condition>
-    </metal:base_edit_macro>
-
     <metal:view_macro define-macro="view"
       tal:define="visState python:widget.isVisible(here, mode);
         getMethod python:(widget.populate and accessor) or None;
@@ -43,7 +17,7 @@
 
     <metal:edit_macro define-macro="edit"
         tal:define="whole_day context/whole_day|nothing;">
-        <metal:use use-macro="field_macro | here/datetime_input/macros/base_edit">
+        <metal:use use-macro="field_macro | context/widgets/field/macros/edit">
 
     <div metal:fill-slot="widget_body">
     

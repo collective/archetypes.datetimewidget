@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-from datetime import date, datetime
+from datetime import datetime
 from archetypes.datetimewidget.i18n import MessageFactory as _
 
 from AccessControl import ClassSecurityInfo
@@ -39,7 +39,7 @@ class DateWidget(widgets.TypesWidget):
         self.context = instance
         self.request = instance.REQUEST
         return super(DateWidget,self).__call__(mode, instance, context=context)
-        
+
     def debugit(self, val):
         import pdb;pdb.set_trace()
         return val
@@ -86,10 +86,10 @@ class DateWidget(widgets.TypesWidget):
         # stick it back in request.form
         form[fname] = value
         return value, {}
-        
+
     def _padded_value(self, value):
         return str(value).zfill(2)
-    
+
     @property
     def days(self):
         day_range = range(1,32)
@@ -102,7 +102,7 @@ class DateWidget(widgets.TypesWidget):
         for i, month in enumerate(month_names):
             yield dict(name = month,
                        value = str(i+1), )
-    
+
     @property
     def years(self):
         year_range = range(2000,2020)
@@ -113,7 +113,9 @@ class DateWidget(widgets.TypesWidget):
             return ''
 
         formatter = self.request.locale.dates.getFormatter("date", "short")
-        datetime_value = datetime(*value.parts()[:6])
+        parts = value.parts()
+        parts = parts[0:5] + (int(parts[5]),)
+        date_value = datetime(*parts)
         if date_value.year > 1900:
             return formatter.format(date_value)
         # due to fantastic datetime.strftime we need this hack
@@ -164,12 +166,11 @@ class DateWidget(widgets.TypesWidget):
         config += 'value: %s' % self.js_value(value)
         config += ('change: function() {\n'
                    '  var value = this.getValue();\n'
-                   '  var parent = jQuery(this.getInput()).closest("div.%(parent_class)s");\n'
+                   '  var parent = jQuery(this.getInput()).closest("div");\n'
                    '  jQuery(parent).find(".year").val(value.getFullYear());\n'
                    '  jQuery(parent).find(".month").val(value.getMonth()+1);\n'
                    '  jQuery(parent).find(".day").val(value.getDate());\n'
-                   '}, ') % dict(id = self.id,
-                                 parent_class = self.name)
+                   '}, ') % dict(id = self.id)
         config += self.js_dateinput_config
         return config
 
