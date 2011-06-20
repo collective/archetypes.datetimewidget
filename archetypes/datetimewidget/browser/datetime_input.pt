@@ -24,7 +24,7 @@
         <!-- day -->
         <select class="day"
                 tal:define="field_id string:${fieldName}-day;
-                            current_val python:request.get(field_id,value.day());"
+                            current_val python:request.get(field_id, value and value.day());"
                 tal:attributes="id field_id;
                                 name field_id;">
             <tal:day repeat="day widget/days">
@@ -40,7 +40,7 @@
         <!-- month -->
         <select id="" name="" class="month"
             tal:define="field_id string:${fieldName}-month;
-                current_val python:request.get(field_id,value.month());"
+                current_val python:request.get(field_id, value and value.month());"
             tal:attributes="id field_id;
                 name field_id;">
         <tal:month repeat="month widget/months">
@@ -56,7 +56,7 @@
         <!-- year -->
         <select class="year"
                 tal:define="field_id string:${fieldName}-year;
-                            current_val python:request.get(field_id,value.year());"
+                            current_val python:request.get(field_id, value and value.year());"
                 tal:attributes="id field_id;
                                 name field_id;">
             <tal:year repeat="year widget/years">
@@ -78,7 +78,7 @@
                 <!-- hour -->
                 <select class="hour"
                         tal:define="field_id string:${fieldName}-hour;
-                                    current_val python:request.get(field_id,value.hour());"
+                                    current_val python:request.get(field_id, value and value.hour());"
                         tal:attributes="id field_id;
                                         name field_id;">
                     <tal:day repeat="hour widget/hours">
@@ -92,7 +92,7 @@
                 <!-- minute -->
                 <select class="min"
                         tal:define="field_id string:${fieldName}-min;
-                                    current_val python:request.get(field_id,value.minute());"
+                                    current_val python:request.get(field_id, value and value.minute());"
                         tal:attributes="id field_id;
                                         name field_id;">
                     <tal:day repeat="min widget/minutes">

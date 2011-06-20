@@ -156,6 +156,9 @@ class DateWidget(widgets.TypesWidget):
         return self.request.get('LANGUAGE', 'en')
 
     def js_value(self, value):
+        if not value:
+            return "'', "
+
         year = value.year
         month = value.month() - 1
         day = value.day()

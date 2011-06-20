@@ -66,6 +66,9 @@ class DatetimeWidget(DateWidget):
         return [{'value':x,'label':self.padded_hour(x)} for x in range(24)]
 
     def js_value(self, value):
+        if not value:
+            return "'', "
+
         year = value.year()
         month = value.month() - 1
         day = value.day()
