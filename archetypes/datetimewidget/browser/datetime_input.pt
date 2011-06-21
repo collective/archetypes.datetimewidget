@@ -19,7 +19,8 @@
         tal:define="whole_day context/whole_day|nothing;">
         <metal:use use-macro="field_macro | context/widgets/field/macros/edit">
 
-    <div metal:fill-slot="widget_body">
+    <div metal:fill-slot="widget_body"
+         tal:define="value python:widget.get_datetime_value(value);">
     
         <!-- day -->
         <select class="day"

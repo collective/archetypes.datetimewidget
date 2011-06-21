@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-
+from DateTime import DateTime
 from datetime import datetime
 from archetypes.datetimewidget.i18n import MessageFactory as _
 
@@ -121,6 +121,12 @@ class DateWidget(widgets.TypesWidget):
         # due to fantastic datetime.strftime we need this hack
         # for now ctime is default
         return date_value.ctime()
+
+    def get_datetime_value(self, value):
+        if isinstance(value, (str, unicode)):
+            return DateTime(value)
+        else:
+            return value
 
     @property
     def year(self):
